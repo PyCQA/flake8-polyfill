@@ -72,6 +72,8 @@ def test_generate_callback_from_normalize_paths():
 filename = 'file.py'
 partial_path = 'path/file.py'
 abspath = os.path.abspath('path/file.py')
+multiple_paths = '{},{}'.format(filename, partial_path)
+parsed_multiple_paths = [filename, abspath]
 
 
 @pytest.mark.parametrize('values, parsed_value, expected_value', [
@@ -81,9 +83,8 @@ abspath = os.path.abspath('path/file.py')
     ({'exclude': filename}, partial_path, filename),
     ({'exclude': partial_path}, partial_path, abspath),
     ({'exclude': partial_path}, filename, abspath),
-    ({'exclude': [filename, partial_path]},
-        '{},{}'.format(filename, partial_path),
-        [filename, abspath]),
+    ({'exclude': [filename, partial_path]}, multiple_paths,
+        parsed_multiple_paths),
 ])
 def test_normalize_paths_callback(values, parsed_value, expected_value):
     """Assert our normalize_paths_callback behaves the right way."""
@@ -120,3 +121,91 @@ def test_comma_separated_callback(values, parsed_value, expected_value):
 
 
 # NOTE(sigmavirus24): Now for the tricky bits
+# We can only really effectively test the composition with real integration
+# tests.
+# Testing generate_callback_from's composition separately means we don't need
+# to test it when we test the register function. We can just assert it has a
+# callback.
+@pytest.mark.parametrize(
+    'comma_separated_list, normalize_paths, preexisting_callback, values, '
+    'parsed_value, expected_value', [
+        (True, True, None, {}, multiple_paths, parsed_multiple_paths),
+        (True, True, None, {'foo': multiple_paths}, multiple_paths,
+            parsed_multiple_paths),
+        (True, True, None, {'foo': parsed_multiple_paths}, multiple_paths,
+            parsed_multiple_paths),
+        (True, True,
+            lambda opt, opt_str, v, p: p.values.foo.append('A.py'),
+            {}, multiple_paths, parsed_multiple_paths + ['A.py']),
+        (True, False,
+            lambda opt, opt_str, v, p: p.values.foo.append('A.py'),
+            {}, multiple_paths, [filename, partial_path, 'A.py']),
+        (False, True,
+            lambda opt, opt_str, v, p: setattr(p.values, 'foo',
+                                               p.values.foo + '.j2'),
+            {}, filename, filename + '.j2'),
+        (False, True,
+            lambda opt, opt_str, v, p: setattr(p.values, 'foo',
+                                               p.values.foo + '.j2'),
+            {}, partial_path, abspath + '.j2'),
+    ]
+)
+def test_generate_callback_from_composition(
+        comma_separated_list, normalize_paths, preexisting_callback, values,
+        parsed_value, expected_value,
+):
+    """Verify our generate_callback_from composition."""
+    dest = 'foo'
+    opt_str = '--{}'.format(dest)
+    option = optparse.Option(opt_str, dest=dest)
+    parser = mock.Mock(values=optparse.Values(values))
+
+    callback = options.generate_callback_from(
+        comma_separated_list=comma_separated_list,
+        normalize_paths=normalize_paths,
+        preexisting_callback=preexisting_callback,
+    )
+
+    callback(option, opt_str, parsed_value, parser)
+    assert getattr(parser.values, dest) == expected_value
+
+
+@pytest.fixture
+def parser():
+    """Provide a pycodestyle-esque OptionParser instance."""
+    parser = optparse.OptionParser('flake8')
+    parser.config_options = []
+    return parser
+
+
+def test_register_parse_from_config(parser):
+    """Verify we append to config_options on registration."""
+    options.register(parser, '--select', default='E123,W504',
+                     parse_from_config=True)
+    assert 'select' in parser.config_options
+
+
+def test_register_comma_separated_list(parser):
+    """Verify we register the comma_separated_callback."""
+    options.register(parser, '--select', default='E123,W504',
+                     comma_separated_list=True)
+    option = parser.get_option('--select')
+    assert option.callback is options.comma_separated_callback
+
+
+def test_register_normalize_paths(parser):
+    """Verify we register the normalize_paths_callback."""
+    options.register(parser, '--exclude', default='file.py',
+                     normalize_paths=True)
+    option = parser.get_option('--exclude')
+    assert option.callback is options.normalize_paths_callback
+
+
+def test_register_comma_separated_paths(parser):
+    """Verify we register a composed hook."""
+    options.register(parser, '--exclude', default='file.py',
+                     normalize_paths=True, comma_separated_list=True)
+    option = parser.get_option('--exclude')
+    assert option.callback is not options.normalize_paths_callback
+    assert option.callback is not options.comma_separated_callback
+    assert option.callback is not None

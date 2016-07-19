@@ -32,6 +32,7 @@ def register(parser, *args, **kwargs):
 
         if callback:
             kwargs['callback'] = callback
+            kwargs['action'] = 'callback'
 
         # We've updated our args and kwargs and can now rather confidently
         # call add_option.
