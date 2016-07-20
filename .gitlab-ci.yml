@@ -7,11 +7,11 @@ before_script:
 
 python2:
   script:
-    - tox -e py27
+    - tox -e py27-flake8_2.5,py27-flake8_2.6,py27-flake8_3
 
 python3:
   script:
-    - tox --skip-missing-interpreters -e py34,py35
+    - tox --skip-missing-interpreters -e py34-flake8_2.5,py34-flake8_2.6,py34-flake8_3,py35-flake8_2.5,py35-flake8_2.6,py35-flake8_3
 
 linters:
   script:
