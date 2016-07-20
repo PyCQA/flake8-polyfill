@@ -86,6 +86,25 @@ To accommodate this, this package provides:
 This allows you to have the polyfill module monkey-patch what you want so it
 is always monkey-patched. It will also do so in an intelligent way.
 
+Version Comparison
+------------------
+
+Flake8 2.x did not include an object that would allow for easy version
+comparison. Flake8 3.0, however, added a ``__version_info__`` attribute. For
+consistency, Flake8 Polyfill will turn 2.x's version string into a tuple
+suitable for comparison.
+
+.. code-block:: python
+
+    from flake8_polyfill import version
+
+    if (2, 4) <= version.version_info < (2, 6):
+        # ...
+    elif (2, 6) <= version.version_info < (3, 0):
+        # ...
+    elif (3, 0) <= version.version_info < (4, 0):
+        # ...
+
 
 License
 =======
