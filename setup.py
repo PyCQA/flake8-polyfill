@@ -30,7 +30,7 @@ setuptools.setup(
     long_description=get_long_description(),
     author='Ian Cordasco',
     author_email='graffatcolmingov@gmail.com',
-    url='https://gitlab.com/pycqa/flake8',
+    url='https://gitlab.com/pycqa/flake8-polyfill',
     package_dir={'': 'src'},
     packages=[
         'flake8_polyfill',
