@@ -36,7 +36,7 @@ def test_normalize_path(value, expected):
      ['file.py', os.path.abspath('path/file.py')]),
 ])
 def test_parse_normalized_paths(value, expected):
-    """Verify that we handle strings and lists when normalizing paths"""
+    """Verify that we handle strings and lists when normalizing paths."""
     assert options.parse_normalized_paths(value) == expected
 
 
@@ -104,7 +104,7 @@ def parser():
 
 
 def test_register_with_store_callback(parser):
-    """Verify we handle typical no-custom-callback case (integration test)"""
+    """Verify we handle typical no-custom-callback case (integration test)."""
     options.register(parser, '--foo', default=['path/file.py'], type='string',
                      comma_separated_list=True, normalize_paths=True)
     values, _ = parser.parse_args([])
@@ -114,7 +114,7 @@ def test_register_with_store_callback(parser):
 
 
 def test_register_with_custom_callback(parser):
-    """Verify we handle custom callback (integration test)"""
+    """Verify we handle custom callback (integration test)."""
     def custom_callback(option, opt_str, value, parser, *args, **kwargs):
         parser.values.count = len(value)
 

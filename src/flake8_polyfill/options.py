@@ -84,8 +84,7 @@ def parse_normalized_paths(value):
 
 
 def store_callback(option, opt_str, value, parser, *args, **kwargs):
-    """Implement optparse's "store" action as a callback to be
-    used as the back_callback for `generate_callback_from`"""
+    """Implement optparse's "store" action as a callback."""
     setattr(parser.values, option.dest, value)
 
 
@@ -93,8 +92,7 @@ def generate_callback_from(comma_separated_list, normalize_paths,
                            base_callback):
     """Generate a callback from parameters provided for the option."""
     def _callback(option, opt_str, value, parser, *args, **kwargs):
-        """Wraps `base_callback` to modify the `value` arg by first applying
-        transformations to account for the option parameters."""
+        """Wrap `base_callback` by transforming `value` for option params."""
         if comma_separated_list:
             value = parse_comma_separated_list(value)
         if normalize_paths:
