@@ -1,7 +1,6 @@
 """Tests for polyfill's stdin monkey patching."""
 import pep8
 import pycodestyle
-
 import pytest
 
 from flake8_polyfill import stdin
