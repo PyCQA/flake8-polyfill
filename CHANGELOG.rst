@@ -1,3 +1,9 @@
+1.0.2 (2017-12-29)
+------------------
+
+- Fix bug where user-supplied value for an option is ignored if the option
+  is transformed with `comma_separated_list` or `normalize_paths` (!4)
+
 1.0.1 (2016-07-19)
 ------------------
 
