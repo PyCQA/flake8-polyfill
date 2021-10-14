@@ -1,0 +1,42 @@
+name: main
+
+on:
+  push:
+    branches: [main]
+    tags:
+  pull_request:
+
+jobs:
+  main:
+    strategy:
+      matrix:
+        include:
+        - os: ubuntu-latest
+          python: 3.6
+          toxenv: py36-flake8_4,py36-flake8_3
+        - os: ubuntu-latest
+          python: 3.7
+          toxenv: py37-flake8_4,py37-flake8_3
+        - os: ubuntu-latest
+          python: 3.8
+          toxenv: py38-flake8_4,py38-flake8_3
+        - os: ubuntu-latest
+          python: 3.9
+          toxenv: py39-flake8_4,py39-flake8_3
+        - os: ubuntu-latest
+          python: "3.10"
+          toxenv: py310-flake8_4,py310-flake8_3
+        - os: ubuntu-latest
+          python: 3.9
+          toxenv: linters
+        - os: ubuntu-latest
+          python: 3.9
+          toxenv: pre-commit
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python }}
+    - run: python -mpip install --upgrade setuptools pip tox virtualenv
+    - run: tox -e ${{ matrix.toxenv }}

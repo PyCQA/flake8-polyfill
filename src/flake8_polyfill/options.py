@@ -20,23 +20,23 @@ def register(parser, *args, **kwargs):
         # Flake8 2.x registration
         # Pop Flake8 3 parameters out of the kwargs so they don't cause a
         # conflict.
-        parse_from_config = kwargs.pop('parse_from_config', False)
-        comma_separated_list = kwargs.pop('comma_separated_list', False)
-        normalize_paths = kwargs.pop('normalize_paths', False)
+        parse_from_config = kwargs.pop("parse_from_config", False)
+        comma_separated_list = kwargs.pop("comma_separated_list", False)
+        normalize_paths = kwargs.pop("normalize_paths", False)
         # In the unlikely event that the developer has specified their own
         # callback, let's pop that and deal with that as well.
-        base_callback = kwargs.pop('callback', store_callback)
-        callback = generate_callback_from(comma_separated_list,
-                                          normalize_paths,
-                                          base_callback)
-        kwargs['callback'] = callback
-        kwargs['action'] = 'callback'
+        base_callback = kwargs.pop("callback", store_callback)
+        callback = generate_callback_from(
+            comma_separated_list, normalize_paths, base_callback
+        )
+        kwargs["callback"] = callback
+        kwargs["action"] = "callback"
 
         # We've updated our args and kwargs and can now rather confidently
         # call add_option.
         option = parser.add_option(*args, **kwargs)
         if parse_from_config:
-            parser.config_options.append(option.get_opt_string().lstrip('-'))
+            parser.config_options.append(option.get_opt_string().lstrip("-"))
 
 
 def parse_comma_separated_list(value):
@@ -53,7 +53,7 @@ def parse_comma_separated_list(value):
         return []
 
     if not isinstance(value, (list, tuple)):
-        value = value.split(',')
+        value = value.split(",")
 
     return [item.strip() for item in value]
 
@@ -88,9 +88,11 @@ def store_callback(option, opt_str, value, parser, *args, **kwargs):
     setattr(parser.values, option.dest, value)
 
 
-def generate_callback_from(comma_separated_list, normalize_paths,
-                           base_callback):
+def generate_callback_from(
+    comma_separated_list, normalize_paths, base_callback
+):
     """Generate a callback from parameters provided for the option."""
+
     def _callback(option, opt_str, value, parser, *args, **kwargs):
         """Wrap `base_callback` by transforming `value` for option params."""
         if comma_separated_list:

@@ -11,12 +11,12 @@ except ImportError:
 
 from flake8_polyfill import version
 
-__all__ = ('monkey_patch',)
+__all__ = ("monkey_patch",)
 
 modules = {
-    'pep8': [pep8],
-    'pycodestyle': [pycodestyle],
-    'all': [pep8, pycodestyle],
+    "pep8": [pep8],
+    "pycodestyle": [pycodestyle],
+    "all": [pep8, pycodestyle],
 }
 
 
@@ -51,9 +51,11 @@ def monkey_patch(which):
     """
     if (2, 0) <= version.version_info < (3, 0):
         from flake8.engine import pep8 as _pep8
+
         stdin_get_value = _pep8.stdin_get_value
     elif (3, 0) <= version.version_info < (4, 0):
         from flake8 import utils
+
         stdin_get_value = utils.stdin_get_value
 
     for module in modules[which]:
