@@ -1,10 +1,14 @@
 """Tests for polyfill's stdin monkey patching."""
+import flake8
 import pep8
 import pycodestyle
 import pytest
 
 from flake8_polyfill import stdin
 from flake8_polyfill import version
+
+if (4, 0, 0) <= flake8.__version_info__:
+    pytestmark = pytest.mark.skip
 
 
 def test_modules_dict():
