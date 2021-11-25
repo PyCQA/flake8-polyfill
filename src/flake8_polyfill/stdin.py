@@ -53,7 +53,7 @@ def monkey_patch(which):
         from flake8.engine import pep8 as _pep8
 
         stdin_get_value = _pep8.stdin_get_value
-    elif (3, 0) <= version.version_info < (4, 0):
+    elif (3, 0) <= version.version_info <= (5, 0, 0):
         from flake8 import utils
 
         stdin_get_value = utils.stdin_get_value
