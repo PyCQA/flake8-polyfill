@@ -1,4 +1,5 @@
 """Tests for our options submodule."""
+
 import optparse
 import os
 from unittest import mock

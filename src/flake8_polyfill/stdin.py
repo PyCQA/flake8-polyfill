@@ -1,4 +1,5 @@
 """Monkey-patching for pep8 and pycodestyle."""
+
 try:
     import pep8
 except ImportError:
