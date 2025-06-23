@@ -1,6 +1,7 @@
 """Tests for polyfill's stdin monkey patching."""
 import flake8
 import pytest
+
 try:
     import pep8
 except ImportError:
