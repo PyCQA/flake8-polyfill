@@ -1,8 +1,15 @@
 """Tests for polyfill's stdin monkey patching."""
 import flake8
-import pep8
-import pycodestyle
 import pytest
+try:
+    import pep8
+except ImportError:
+    pep8 = None
+
+try:
+    import pycodestyle
+except ImportError:
+    pycodestyle = None
 
 from flake8_polyfill import stdin
 from flake8_polyfill import version
