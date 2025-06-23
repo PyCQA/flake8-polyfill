@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=61.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "flake8_polyfill"
+description = "Polyfill package for Flake8 plugins"
+authors = [{name = "Ian Stapleton Cordasco", email = "graffatcolmingov@gmail.com"}]
+license = "MIT"
+license-files = ["LICENSE"]
+classifiers = [
+    "Environment :: Console",
+    "Framework :: Flake8",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Quality Assurance",
+]
+urls = {Homepage = "https://github.com/pycqa/flake8-polyfill"}
+requires-python = ">=3.6"
+dependencies = ["flake8"]
+dynamic = ["version"]
+readme = "README.rst"
+
+[tool.setuptools]
+include-package-data = false
+
+[tool.setuptools.dynamic]
+version = {attr = "flake8_polyfill.__version__"}
+
+[tool.pytest.ini_options]
+norecursedirs = [".git", ".*", "*.egg*", "old", "docs", "dist", "build"]
+addopts = "-rw"
