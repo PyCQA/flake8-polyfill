@@ -1,4 +1,5 @@
 """Option handling polyfill for Flake8 2.x and 3.x."""
+
 import optparse
 import os
 
